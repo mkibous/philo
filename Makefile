@@ -1,7 +1,7 @@
-SRCS = main.c
+SRCS = main.c atoi.c
 OBJS = $(SRCS:.c=.o)
 CC = CC
-CFLAGS = -Wall Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror
 NAME = philo
 RM = rm -f
 all: $(NAME)
