@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/04/23 21:06:26 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/04/23 21:07:30 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ long ft_get_current_time(long start_time)
     
     gettimeofday(&time, NULL);
     return (((time.tv_sec * 1000) + (time.tv_usec / 1000)) - start_time);
-
+}
 int ft_mutex_init(t_args *args)
 {
     int i;
