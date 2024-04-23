@@ -7,6 +7,7 @@
 #include <string.h>//memset
 #include <unistd.h>//usleep write
 long	ft_atoi(char *str);
+
 typedef struct s_args
 {
     int number_of_philos;
