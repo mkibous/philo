@@ -7,11 +7,17 @@ RM = rm -f
 all: $(NAME)
 $(NAME): $(OBJS) philosophers.h
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
-%.o: %.c
+%.o: %.c philosophers.h
 	$(CC) $(CFLAGS) -c $< -o $@
 clean:
 	$(RM) $(OBJS)
 fclean: clean
 	$(RM) $(NAME)
 re: fclean all
-.PHONY: clean
+push:
+	@read -p "Enter commit message: " commit_message; \
+	git add .; \
+	git commit -m "$$commit_message"; \
+	git push;
+
+.PHONY: clean push
