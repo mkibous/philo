@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/04/23 21:09:08 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/04/23 21:09:19 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,3 @@ int main(int arc, char **argv)
         || ft_mutex_init(&args))
         return (1);
 }
- 
