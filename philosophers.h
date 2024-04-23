@@ -19,6 +19,7 @@ typedef struct s_args
     pthread_mutex_t *forks;
     struct s_philo *philos;
 }				t_args;
+
 typedef struct s_philo
 {
     int id;
@@ -27,4 +28,3 @@ typedef struct s_philo
     t_args *args;
 }				t_philo;
 #endif 
-
