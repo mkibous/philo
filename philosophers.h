@@ -16,6 +16,8 @@ typedef struct s_args
     long time_to_sleep;
     long number_eat;
     long start_time;
+    int dead;
+    pthread_mutex_t print;
     pthread_mutex_t *forks;
     struct s_philo *philos;
 }				t_args;
@@ -23,8 +25,10 @@ typedef struct s_args
 typedef struct s_philo
 {
     int id;
-    char *left_fork;
-    char *right_fork;
+    long die_time;
+    pthread_mutex_t *left_fork;
+    pthread_mutex_t *right_fork;
     t_args *args;
+    pthread_t thread;
 }				t_philo;
 #endif 
