@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/04/24 23:46:30 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/04/25 15:58:56 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ long ft_time(long start_time)
     struct timeval time;
     
     gettimeofday(&time, NULL);
-    if(start_time && ((time.tv_sec * 1000) + (time.tv_usec / 1000)) - start_time > 0)
+    if(start_time >= 0)
         return (((time.tv_sec * 1000) + (time.tv_usec / 1000)) - start_time);
     return (((time.tv_sec * 1000) + (time.tv_usec / 1000)));
 }
@@ -48,8 +48,8 @@ void ft_sleep(long time)
 {
     long start_time;
     
-    start_time = ft_time(0);
-    while (ft_time(0) - start_time < time)
+    start_time = ft_time(-1);
+    while (ft_time(-1) - start_time < time)
         usleep(100);
 }
 int ft_mutex_init(t_args *args)
@@ -140,7 +140,7 @@ int main(int arc, char **argv)
 
     i = 0;
     memset(&args, 0, sizeof(t_args));
-    args.start_time = ft_time(0);
+    args.start_time = ft_time(-1);
     if ((arc != 5 && arc != 6) || ft_parsing(&args, argv) == -1
         || ft_mutex_init(&args))
         return (1);
@@ -156,6 +156,7 @@ int main(int arc, char **argv)
             args.dead = 1;
             usleep(500);
             printf("%ld %d died\n", ft_time(args.start_time), i + 1);
+            pthread_mutex_destroy(&args.print);
             return (0);
             
         }
