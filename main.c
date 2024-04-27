@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/04/25 15:58:56 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/04/26 11:16:51 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,36 +77,26 @@ void *ft_philo_thread(void *args)
     while(1)
     {
         // printf("phio %d id\n", philo->id + 1);
+        pthread_mutex_lock(&philo->args->philos_num_mutex);
         philo->left_fork = &philo->args->forks[philo->id];
         philo->right_fork = &philo->args->forks[(philo->id + 1) % philo->args->number_of_philos];
+        pthread_mutex_unlock(&philo->args->philos_num_mutex);
         pthread_mutex_lock(philo->left_fork);
         pthread_mutex_lock(philo->right_fork);
-        pthread_mutex_lock(&philo->args->print);
-        if(philo->args->dead)
-            break;
         printf("%ld %d has taken a fork\n", ft_time(philo->args->start_time), philo->id + 1);
         printf("%ld %d has taken a fork\n", ft_time(philo->args->start_time), philo->id + 1);
         printf("%ld %d is eating\n", ft_time(philo->args->start_time), philo->id + 1);
-        pthread_mutex_unlock(&philo->args->print);
         if(philo->args->number_eat > 0 && philo->id + 1 == philo->args->number_of_philos)
             philo->args->number_eat--;
+        pthread_mutex_lock(&philo->args->dead_mutex);
         philo->die_time = ft_time(philo->args->start_time) + philo->args->time_to_die;
+        pthread_mutex_unlock(&philo->args->dead_mutex);
         ft_sleep(philo->args->time_to_eat);
-        if(philo->args->dead)
-            break;
         pthread_mutex_unlock(philo->left_fork);
         pthread_mutex_unlock(philo->right_fork);
-        pthread_mutex_lock(&philo->args->print);
-        if(philo->args->dead)
-            break;
         printf("%ld %d is sleeping\n", ft_time(philo->args->start_time), philo->id + 1);
-        pthread_mutex_unlock(&philo->args->print);
         ft_sleep(philo->args->time_to_sleep);
-        pthread_mutex_lock(&philo->args->print);
-        if(philo->args->dead)
-            break;
         printf("%ld %d is thinking\n", ft_time(philo->args->start_time), philo->id + 1);
-        pthread_mutex_unlock(&philo->args->print);
         // usleep(100);
     }
     return (NULL);
@@ -144,25 +134,31 @@ int main(int arc, char **argv)
     if ((arc != 5 && arc != 6) || ft_parsing(&args, argv) == -1
         || ft_mutex_init(&args))
         return (1);
-    pthread_mutex_init(&args.print, NULL);
+    pthread_mutex_init(&args.philos_num_mutex, NULL);
+    pthread_mutex_init(&args.dead_mutex, NULL);
+    pthread_mutex_init(&args.eat_mutex, NULL);
     ft_philo(&args);
     while (1)
     {
+        pthread_mutex_lock(&args.eat_mutex);
         if(args.number_eat == 0)
             break;
+        pthread_mutex_unlock(&args.eat_mutex);
+        pthread_mutex_lock(&args.dead_mutex);
         if(ft_time(args.start_time) > args.philos[i].die_time && args.philos[i].die_time != 0)
         {
-            pthread_mutex_lock(&args.print);
-            args.dead = 1;
+            pthread_mutex_unlock(&args.dead_mutex);
             usleep(500);
             printf("%ld %d died\n", ft_time(args.start_time), i + 1);
-            pthread_mutex_destroy(&args.print);
             return (0);
             
         }
+        pthread_mutex_unlock(&args.dead_mutex);
         i++;
+        pthread_mutex_lock(&args.philos_num_mutex);
         if(i == args.number_of_philos)
             i = 0;
+        pthread_mutex_unlock(&args.philos_num_mutex);
     }
-    
+    pthread_mutex_unlock(&args.eat_mutex);
 }

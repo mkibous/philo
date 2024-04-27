@@ -17,7 +17,9 @@ typedef struct s_args
     long number_eat;
     long start_time;
     int dead;
-    pthread_mutex_t print;
+    pthread_mutex_t philos_num_mutex;
+    pthread_mutex_t eat_mutex;
+    pthread_mutex_t dead_mutex;
     pthread_mutex_t *forks;
     struct s_philo *philos;
 }				t_args;
