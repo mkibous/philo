@@ -20,6 +20,7 @@ typedef struct s_args
     pthread_mutex_t philos_num_mutex;
     pthread_mutex_t eat_mutex;
     pthread_mutex_t dead_mutex;
+    pthread_mutex_t write_mutex;
     pthread_mutex_t *forks;
     struct s_philo *philos;
 }				t_args;
