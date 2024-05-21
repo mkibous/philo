@@ -6,11 +6,12 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 15:37:20 by mkibous           #+#    #+#             */
-/*   Updated: 2024/04/23 11:01:02 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/18 14:45:51 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
 int	ft_isdigit(int c)
 {
 	if (c >= '0' && c <= '9')
@@ -40,15 +41,12 @@ int	ft_skipzero(const char *str)
 
 long	ft_atoi(char *str)
 {
-	int				s;
-	int				i;
+	int		s;
+	int		i;
 	long	nbr;
-	int				count;
+	int		count;
 
-	i = 0;
-	s = 1;
-	nbr = 0;
-	count = 0;
+	(1) && (i = 0, s = 1, nbr = 0, count = 0);
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
 		i++;
 	if (str[i] == '+' || str[i] == '-')
@@ -64,5 +62,7 @@ long	ft_atoi(char *str)
 		count++;
 		i++;
 	}
+	if (str[i])
+		return (-1);
 	return (ft_outoflimit(nbr, s, count));
 }

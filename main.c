@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/11 12:19:34 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/21 16:07:22 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,14 @@ int ft_mutex_init(t_args *args)
             return (1);
         i++;
     }
+    if(pthread_mutex_init(&args->philos_num_mutex, NULL) != 0)
+        return (1);
+    if(pthread_mutex_init(&args->dead_mutex, NULL) != 0)
+        return (1);
+    if(pthread_mutex_init(&args->eat_mutex, NULL) != 0)
+        return (1);
+    if(pthread_mutex_init(&args->write_mutex, NULL) != 0)
+        return (1);
     return (0);
 }
 
@@ -91,9 +99,10 @@ void *ft_philo_thread(void *args)
         pthread_mutex_unlock(&philo->args->write_mutex);
         pthread_mutex_lock(&philo->args->write_mutex);
         printf("%ld %d is eating\n", ft_time(philo->args->start_time), philo->id + 1);
+        pthread_mutex_lock(&philo->args->eat_mutex);
+        philo->eat++;
+        pthread_mutex_unlock(&philo->args->eat_mutex);
         pthread_mutex_unlock(&philo->args->write_mutex);
-        if(philo->args->number_eat > 0 && philo->id + 1 == philo->args->number_of_philos)
-            philo->args->number_eat--;
         pthread_mutex_lock(&philo->args->dead_mutex);
         philo->die_time = ft_time(philo->args->start_time) + philo->args->time_to_die;
         pthread_mutex_unlock(&philo->args->dead_mutex);
@@ -125,13 +134,55 @@ void ft_philo(t_args *args)
         memset(&philos[i], 0, sizeof(t_philo));
         args->philos[i].id = i;
         args->philos[i].args = args;
+        args->philos[i].eat = 0;
         args->philos[i].die_time = ft_time(args->start_time) + args->time_to_die;
-        philos[i].thread = malloc(sizeof(pthread_t));
+        // philos[i].thread = malloc(sizeof(pthread_t));
         if((i + 1) % 2 == 0 && i > 0)
             usleep(100);
         pthread_create(&philos[i].thread, NULL, ft_philo_thread, (void *)&philos[i]);
         i++;
     }
+}
+int chek_eat(t_args *args)
+{
+    int i;
+    
+    i = 0;
+    while(i < args->number_of_philos)
+    {
+        if(args->philos[i].eat < args->number_eat)
+            return (1);
+        i++;
+        ft_sleep(10);
+    }
+    return (0);
+}
+void ft_free(t_args *args)
+{
+    int i;
+    
+    i = 0;
+    while(i < args->number_of_philos)
+    {
+        pthread_mutex_destroy(&args->forks[i]);
+        i++;
+    }
+    i = 0;
+    // while(i < args->number_of_philos)
+    // {
+    //     pthread_join(args->philos[i].thread, NULL);
+    //     i++;
+    // }
+    pthread_mutex_destroy(&args->philos_num_mutex);
+    pthread_mutex_destroy(&args->dead_mutex);
+    pthread_mutex_destroy(&args->eat_mutex);
+    pthread_mutex_destroy(&args->write_mutex);
+    free(args->forks);
+    free(args->philos);
+}
+void f(void)
+{
+    system("leaks philo");
 }
 int main(int arc, char **argv)
 {
@@ -139,30 +190,28 @@ int main(int arc, char **argv)
     int i;
 
     i = 0;
+    // atexit(f);
     memset(&args, 0, sizeof(t_args));
     args.start_time = ft_time(-1);
     if ((arc != 5 && arc != 6) || ft_parsing(&args, argv) == -1
         || ft_mutex_init(&args))
         return (1);
-    pthread_mutex_init(&args.philos_num_mutex, NULL);
-    pthread_mutex_init(&args.dead_mutex, NULL);
-    pthread_mutex_init(&args.eat_mutex, NULL);
-    pthread_mutex_init(&args.write_mutex, NULL);
     ft_philo(&args);
     while (1)
     {
         pthread_mutex_lock(&args.eat_mutex);
-        if(args.number_eat == 0)
-            break;
+        if(args.number_eat != -1 && chek_eat(&args) == 0 )
+            return (ft_free(&args), 0);
         pthread_mutex_unlock(&args.eat_mutex);
         pthread_mutex_lock(&args.dead_mutex);
-        if(ft_time(args.start_time) > args.philos[i].die_time && args.philos[i].die_time != 0)
+        if(ft_time(args.start_time) > args.philos[i].die_time
+            && args.philos[i].die_time != 0)
         {
             pthread_mutex_unlock(&args.dead_mutex);
             pthread_mutex_lock(&args.write_mutex);
             printf("%ld %d died\n", ft_time(args.start_time), i + 1);
             ft_sleep(10);
-            return (0);
+            return (ft_free(&args), 0);
         }
         pthread_mutex_unlock(&args.dead_mutex);
         i++;
@@ -170,6 +219,8 @@ int main(int arc, char **argv)
         if(i == args.number_of_philos)
             i = 0;
         pthread_mutex_unlock(&args.philos_num_mutex);
+        usleep(100);
     }
-    pthread_mutex_unlock(&args.eat_mutex);
+    ft_free(&args);
+    return (0);
 }

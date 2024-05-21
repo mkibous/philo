@@ -1,14 +1,14 @@
-SRCS = main.c atoi.c
+SRCS = atoi.c main.c
 OBJS = $(SRCS:.c=.o)
 CC = CC
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 NAME = philo
 RM = rm -f
 all: $(NAME)
 $(NAME): $(OBJS) philosophers.h
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 %.o: %.c philosophers.h
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $<
 clean:
 	$(RM) $(OBJS)
 fclean: clean
