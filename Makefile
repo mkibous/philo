@@ -3,7 +3,7 @@ OBJS = $(SRCS:.c=.o)
 CC = CC
 CFLAGS = -Wall -Wextra -Werror -g
 NAME = philo
-RM = rm -f
+RM = rm -f 
 all: $(NAME)
 $(NAME): $(OBJS) philosophers.h
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
