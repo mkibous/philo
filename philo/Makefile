@@ -1,7 +1,7 @@
 SRCS = utils.c main.c philo.c atoi.c
 OBJS = $(SRCS:.c=.o)
 CC = CC
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror 
 NAME = philo
 RM = rm -f
 all: $(NAME)
@@ -14,10 +14,5 @@ clean:
 fclean: clean
 	$(RM) $(NAME)
 re: fclean all
-push:
-	@read -p "Enter commit message: " commit_message; \
-	git add .; \
-	git commit -m "$$commit_message"; \
-	git push;
 
-.PHONY: clean push
+.PHONY: clean

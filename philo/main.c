@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/23 15:35:25 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/26 20:31:05 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ int	while_true(t_args *args, int i)
 			pthread_mutex_unlock(&args->dead_mutex);
 			pthread_mutex_lock(&args->write_mutex);
 			printf("%ld %d died\n", ft_time(args->start_time), i + 1);
+			usleep(500);
 			return (0);
 		}
 		pthread_mutex_unlock(&args->dead_mutex);
@@ -103,7 +104,7 @@ int	while_true(t_args *args, int i)
 		if (i == args->number_of_philos)
 			i = 0;
 		pthread_mutex_unlock(&args->philos_num_mutex);
-		usleep(100);
+		// usleep(10);
 	}
 	return (1);
 }
@@ -121,6 +122,7 @@ int	main(int arc, char **argv)
 		return (1);
 	ft_philo(&args);
 	while_true(&args, i);
+	ft_sleep(100);
 	ft_free(&args);
 	return (0);
 }
