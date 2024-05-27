@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:33:11 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/26 16:36:17 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/27 15:35:41 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-#include <semaphore.h>
-#include <signal.h>
+# include <semaphore.h>
+# include <signal.h>
 # include <unistd.h>
-
 typedef struct s_args
 {
 	int				number_of_philos;
@@ -32,7 +31,7 @@ typedef struct s_args
 	long			start_time;
 	int				dead;
 	pid_t			*pid;
-	sem_t			*dead_sem;
+	sem_t			*forks;
 	struct s_philo	*philos;
 }				t_args;
 

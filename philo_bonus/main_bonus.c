@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/27 12:46:17 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/27 18:39:23 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,27 +34,23 @@ void	*ft_philo_routine(void *args)
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
+	int i = 0;
 	while (1)
 	{
-		// eat(philo);
+		sem_wait(philo->args->forks);
+		sem_wait(philo->args->forks);
+		printf("%ld %d has taken a fork\n", ft_time(philo->args->start_time), philo->id + 1);
+		printf("%ld %d has taken a fork\n", ft_time(philo->args->start_time), philo->id + 1);
 		printf("%ld %d is eating\n", ft_time(philo->args->start_time), philo->id + 1);
-		// pthread_mutex_lock(&philo->args->eat_mutex);
 		philo->eat++;
-		// pthread_mutex_unlock(&philo->args->eat_mutex);
-		// pthread_mutex_lock(&philo->args->dead_mutex);
 		philo->die_time = ft_time(philo->args->start_time)
 			+ philo->args->time_to_die;
-		// pthread_mutex_unlock(&philo->args->dead_mutex);
 		ft_sleep(philo->args->time_to_eat);
+		sem_post(philo->args->forks);
+		sem_post(philo->args->forks);
 		printf("%ld %d is sleeping\n", ft_time(philo->args->start_time), philo->id + 1);
-		// pthread_mutex_unlock(philo->left_fork);
-		// pthread_mutex_unlock(philo->right_fork);
-		// ft_print(ft_time(philo->args->start_time), philo->id + 1,
-		// 	"is sleeping", &philo->args->write_mutex);
-		// ft_sleep(philo->args->time_to_sleep);
-		// ft_print(ft_time(philo->args->start_time), philo->id + 1,
-		// 	"is thinking", &philo->args->write_mutex);
-		// ft_sleep(1000);
+		ft_sleep(philo->args->time_to_sleep);
+		printf("%ld %d is thinking\n", ft_time(philo->args->start_time), philo->id + 1);
 	}
 	return (NULL);
 }
@@ -69,15 +65,16 @@ void	ft_philo(t_args *args)
 	memset(pid, 0, sizeof(pid));
 	philos = malloc(sizeof(t_philo) * args->number_of_philos);
 	args->philos = philos;
+	sem_unlink("/forks");
+	args->forks = sem_open("/forks", O_CREAT, 0644, args->number_of_philos);
+	args->start_time = ft_time(-1);
 	while (i < args->number_of_philos)
 	{
 		pid[i] = fork();
-		args->start_time = ft_time(-1);
 		if(pid[i] == -1)
 			exit(1);
 		if (pid[i] == 0)
 		{
-		
 			memset(&philos[i], 0, sizeof(t_philo));
 			args->philos[i].id = i;
 			args->philos[i].args = args;
@@ -149,4 +146,3 @@ int	main(int arc, char **argv)
 	// ft_free(&args);
 	return (0);
 }
- 

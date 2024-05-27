@@ -1,7 +1,7 @@
 SRCS = utils_bonus.c main_bonus.c philo_bonus.c atoi_bonus.c
 OBJS = $(SRCS:.c=.o)
 CC = CC
-CFLAGS = -Wall -Wextra  -g -fsanitize=address
+CFLAGS = -Wall -Wextra 
 NAME = philo_bonus
 RM = rm -f
 all: $(NAME)

@@ -1,7 +1,7 @@
 SRCS = utils.c main.c philo.c atoi.c
 OBJS = $(SRCS:.c=.o)
 CC = CC
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -g
 NAME = philo
 RM = rm -f
 all: $(NAME)
