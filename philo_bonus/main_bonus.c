@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/26 20:28:27 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/27 12:44:13 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	*while_true(void *args)
 		if (philo->args->number_eat != -1 && philo->eat >= philo->args->number_eat)
 		{
 			exit(0);
-		}
+		} 
 		// pthread_mutex_unlock(&args->eat_mutex);
 		// pthread_mutex_lock(&args->dead_mutex);
 		if (ft_time(philo->args->start_time) >= philo->die_time
