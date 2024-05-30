@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:32:31 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/27 18:38:44 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/30 09:42:42 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ void	ft_sleep(long time)
 		usleep(100);
 }
 
-void	ft_print(long time, int id, char *str)
+void	ft_print(long time, int id, char *str, sem_t *print)
 {
-	// pthread_mutex_lock(mutex);
+	sem_wait(print);
 	printf("%ld %d %s\n", time, id, str);
-	// pthread_mutex_unlock(mutex);
+	sem_post(print);
 }

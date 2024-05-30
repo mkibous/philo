@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:33:11 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/27 15:35:41 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/30 18:31:22 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <semaphore.h>
 # include <signal.h>
 # include <unistd.h>
+
 typedef struct s_args
 {
 	int				number_of_philos;
@@ -32,6 +33,7 @@ typedef struct s_args
 	int				dead;
 	pid_t			*pid;
 	sem_t			*forks;
+	sem_t			*print;
 	struct s_philo	*philos;
 }				t_args;
 
@@ -49,4 +51,9 @@ void	ft_sleep(long time);
 int		chek_eat(t_args *args);
 long	ft_atoi(char *str);
 void	*while_true(void *args);
+void	ft_print(long time, int id, char *str, sem_t *print);
+void	ft_kill(t_args *args);
+void	ft_child(t_args *args, int i);
+void	ft_free(t_args *args);
+void	*ft_philo_routine(void *args);
 #endif

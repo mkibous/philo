@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/27 15:37:43 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/05/30 18:32:19 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ int	while_true(t_args *args, int i)
 		if (i == args->number_of_philos)
 			i = 0;
 		pthread_mutex_unlock(&args->philos_num_mutex);
-		// usleep(10);
 	}
 	return (1);
 }
