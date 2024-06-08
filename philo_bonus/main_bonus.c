@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/06/08 15:32:07 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/06/08 23:10:32 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	ft_philo(t_args *args)
 
 	i = 0;
 	pid = malloc(sizeof(pid_t) * args->number_of_philos);
+	if (!pid)
+		return ;
 	memset(pid, 0, sizeof(pid_t) * args->number_of_philos);
 	args->pid = pid;
 	args->start_time = ft_time(-1);
@@ -109,6 +111,8 @@ int	main(int arc, char **argv)
 	if ((arc != 5 && arc != 6) || ft_parsing(&args, argv) == -1)
 		return (1);
 	philos = malloc(sizeof(t_philo) * args.number_of_philos);
+	if (!philos)
+		return (1);
 	args.philos = philos;
 	sem_unlink("/forks");
 	sem_unlink("/print");

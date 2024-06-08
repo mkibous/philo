@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/06/08 15:28:19 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/06/08 23:09:32 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	ft_philo(t_args *args)
 
 	i = 0;
 	philos = malloc(sizeof(t_philo) * args->number_of_philos);
+	if (!philos)
+		return ;
 	args->philos = philos;
 	while (i < args->number_of_philos)
 	{
