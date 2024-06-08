@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/30 18:30:46 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/06/08 15:32:07 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	ft_fork(t_philo *philo)
 	sem_wait(philo->args->forks);
 	ft_print(ft_time(philo->args->start_time), philo->id + 1,
 		"has taken a fork", philo->args->print);
+	ft_print(ft_time(philo->args->start_time), philo->id + 1,
+		"is eating", philo->args->print);
 }
 
 void	*ft_philo_routine(void *args)
@@ -30,14 +32,17 @@ void	*ft_philo_routine(void *args)
 	while (1)
 	{
 		ft_fork(philo);
-		ft_print(ft_time(philo->args->start_time), philo->id + 1,
-			"is eating", philo->args->print);
 		philo->eat++;
+		sem_wait(philo->time);
 		philo->die_time = ft_time(philo->args->start_time)
 			+ philo->args->time_to_die;
+		sem_post(philo->time);
 		ft_sleep(philo->args->time_to_eat);
 		sem_post(philo->args->forks);
 		sem_post(philo->args->forks);
+		if (philo->args->number_eat != -1
+			&& philo->eat >= philo->args->number_eat)
+			exit(0);
 		ft_print(ft_time(philo->args->start_time), philo->id + 1,
 			"is sleeping", philo->args->print);
 		ft_sleep(philo->args->time_to_sleep);
@@ -56,6 +61,7 @@ void	ft_philo(t_args *args)
 	pid = malloc(sizeof(pid_t) * args->number_of_philos);
 	memset(pid, 0, sizeof(pid_t) * args->number_of_philos);
 	args->pid = pid;
+	args->start_time = ft_time(-1);
 	while (i < args->number_of_philos)
 	{
 		pid[i] = fork();
@@ -63,15 +69,9 @@ void	ft_philo(t_args *args)
 			exit(1);
 		if (pid[i] == 0)
 			ft_child(args, i);
-		else if (i + 1 == args->number_of_philos)
-		{
-			if (waitpid(-1, NULL, 0) == -1)
-				exit(1);
-			ft_kill(args);
-			return ;
-		}
 		i++;
 	}
+	ft_wait(args);
 }
 
 void	*while_true(void *args)
@@ -81,9 +81,7 @@ void	*while_true(void *args)
 	philo = (t_philo *)args;
 	while (1)
 	{
-		if (philo->args->number_eat != -1
-			&& philo->eat >= philo->args->number_eat)
-			exit(0);
+		sem_wait(philo->time);
 		if (ft_time(philo->args->start_time) >= philo->die_time
 			&& philo->die_time != 0)
 		{
@@ -91,8 +89,10 @@ void	*while_true(void *args)
 			sem_wait(philo->args->print);
 			printf("%ld %d died\n", ft_time(philo->args->start_time),
 				philo->id + 1);
-			exit(0);
+			exit(1);
 		}
+		sem_post(philo->time);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -114,7 +114,6 @@ int	main(int arc, char **argv)
 	sem_unlink("/print");
 	args.forks = sem_open("/forks", O_CREAT, 0644, args.number_of_philos);
 	args.print = sem_open("/print", O_CREAT, 0644, 1);
-	args.start_time = ft_time(-1);
 	ft_philo(&args);
 	ft_free(&args);
 	return (0);

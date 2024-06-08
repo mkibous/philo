@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/30 18:32:19 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/06/08 15:28:19 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ void	eat(t_philo *philo)
 		% philo->args->number_of_philos];
 	pthread_mutex_unlock(&philo->args->philos_num_mutex);
 	pthread_mutex_lock(philo->left_fork);
-	pthread_mutex_lock(philo->right_fork);
 	ft_print(ft_time(philo->args->start_time), philo->id + 1,
 		"has taken a fork", &philo->args->write_mutex);
+	pthread_mutex_lock(philo->right_fork);
 	ft_print(ft_time(philo->args->start_time), philo->id + 1,
 		"has taken a fork", &philo->args->write_mutex);
 	ft_print(ft_time(philo->args->start_time), philo->id + 1,

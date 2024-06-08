@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:33:11 by mkibous           #+#    #+#             */
-/*   Updated: 2024/05/30 18:31:22 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/06/08 15:31:28 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_philo
 	int				id;
 	long			die_time;
 	long			eat;
+	sem_t			*time;
 	pthread_t		thread;
 	t_args			*args;
 }				t_philo;
@@ -56,4 +57,5 @@ void	ft_kill(t_args *args);
 void	ft_child(t_args *args, int i);
 void	ft_free(t_args *args);
 void	*ft_philo_routine(void *args);
+void	ft_wait(t_args *args);
 #endif
