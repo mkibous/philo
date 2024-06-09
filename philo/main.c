@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 10:25:07 by mkibous           #+#    #+#             */
-/*   Updated: 2024/06/08 23:09:32 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/06/09 17:01:26 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	*ft_philo_thread(void *args)
 	return (NULL);
 }
 
-void	ft_philo(t_args *args)
+int	ft_philo(t_args *args)
 {
 	int		i;
 	t_philo	*philos;
@@ -64,7 +64,7 @@ void	ft_philo(t_args *args)
 	i = 0;
 	philos = malloc(sizeof(t_philo) * args->number_of_philos);
 	if (!philos)
-		return ;
+		return (1);
 	args->philos = philos;
 	while (i < args->number_of_philos)
 	{
@@ -76,10 +76,12 @@ void	ft_philo(t_args *args)
 			+ args->time_to_die;
 		if ((i + 1) % 2 == 0 && i > 0)
 			usleep(100);
-		pthread_create(&philos[i].thread, NULL, ft_philo_thread,
-			(void *)&philos[i]);
+		if (pthread_create(&philos[i].thread, NULL, ft_philo_thread,
+				(void *)&philos[i]) != 0)
+			return (1);
 		i++;
 	}
+	return (0);
 }
 
 int	while_true(t_args *args, int i)
@@ -121,9 +123,13 @@ int	main(int arc, char **argv)
 	if ((arc != 5 && arc != 6) || ft_parsing(&args, argv) == -1
 		|| ft_mutex_init(&args))
 		return (1);
-	ft_philo(&args);
+	if (ft_philo(&args) == 1)
+	{
+		ft_free(&args);
+		return (1);
+	}
 	while_true(&args, i);
-	ft_sleep(100);
+	ft_sleep(500);
 	ft_free(&args);
 	return (0);
 }

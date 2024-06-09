@@ -6,7 +6,7 @@
 /*   By: mkibous <mkibous@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 15:36:16 by mkibous           #+#    #+#             */
-/*   Updated: 2024/06/08 15:31:48 by mkibous          ###   ########.fr       */
+/*   Updated: 2024/06/09 10:47:01 by mkibous          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	ft_free(t_args *args)
 	}
 	sem_close(args->forks);
 	sem_close(args->print);
+	sem_unlink("/forks");
+	sem_unlink("/print");
 	free(args->pid);
 	free(args->philos);
 }
